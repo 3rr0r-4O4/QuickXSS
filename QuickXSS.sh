@@ -42,10 +42,15 @@ contruct_mode(){
 
     echo -e "\nFinding URLs for $domain using Waybackurls ...."
 
-    echo "$domain" | waybackurls | tee "$domain".txt >/dev/null 2>&1;
-    printf "URLS fetched using waybackurls & Stored in $blue$domain.txt$end"
+    echo "$domain" | waybackurls | tee "$domaintemp".txt >/dev/null 2>&1;
+    printf "URLS fetched using waybackurls & Stored in $blue$domaintemp.txt$end"
     printf "\n\nFinding URLs for $domain using gau ....\n"
-    echo "$1" | gau | tee -a $domain.txt >/dev/null 2>&1;
+    echo "$1" | gau | tee -a $domaintemp.txt >/dev/null 2>&1;
+    
+    echo -e "\033[0;38msorting urls...."
+    cat $domaintemp.txt | sort -u | tee $domain.txt
+    rm domaintemp.txt
+    
     printf "URLS fetched using gau & appended in $blue$domain.txt$end \n\n"
 
     echo -e "\nFinding valid URLs for XSS using GF Patterns \n"
